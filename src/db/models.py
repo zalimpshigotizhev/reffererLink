@@ -2,6 +2,8 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import DeclarativeBase,  Mapped, mapped_column
+from sqlalchemy import BLOB
+
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -14,7 +16,8 @@ class UserORM(Base):
     name: Mapped[str] = mapped_column(nullable=False)
     surname: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(nullable=False)
+    password: Mapped[bytes] = mapped_column(nullable=False)
+    referral_code: Mapped[str] = mapped_column(nullable=True)
 
 
 

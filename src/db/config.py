@@ -1,16 +1,24 @@
 import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from models import Base
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from src.config import settings
+from .models import Base
+
+DB_NAME = settings.db.database
+DB_PASSWORD = settings.db.password
+DB_USER = settings.db.user
+DB_HOST = settings.db.host
+DB_PORT = settings.db.port
 
 
 engine = create_async_engine(
-    "postgresql+asyncpg://postgres:552216742@localhost:5432/postgres",
+    f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
     echo=True,
 )
 
 
-new_session = sessionmaker(bind=engine, expire_on_commit=False)
+new_session = async_sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
 
 
 async def create_tables(engine):
@@ -18,7 +26,12 @@ async def create_tables(engine):
         await conn.run_sync(Base.metadata.create_all)
 
 
-asyncio.run(create_tables(engine))
-
+async def get_db():
+    await create_tables(engine)
+    db = new_session()
+    try:
+        yield db
+    finally:
+        await db.close()
 
 
