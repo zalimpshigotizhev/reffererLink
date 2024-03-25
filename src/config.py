@@ -1,6 +1,10 @@
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,16 +18,17 @@ class AuthJWT(BaseModel):
 
 
 class DB(BaseModel):
-    user: str = "postgres"
-    password: str = "552216742"
-    host: str = "localhost"
-    port: int = 5432
-    database: str = "postgres"
+    DB_NAME: str = os.environ.get("DB_NAME", "postgres")
+    DB_PASSWORD: str = os.environ.get("DB_PASSWORD", "aa")
+    DB_USER: str = os.environ.get("DB_USER", "postgres")
+    DB_HOST: str = os.environ.get("DB_HOST", "localhost")
+    DB_PORT: int = os.environ.get("DB_PORT", 5432)
 
 
 class Settings(BaseSettings):
     auth_jwt: AuthJWT = AuthJWT()
     db: DB = DB()
+    db_url: str = f"postgresql+asyncpg://{db.DB_USER}:{db.DB_PASSWORD}@{db.DB_HOST}:{db.DB_PORT}/{db.DB_NAME}"
 
 
 settings = Settings()

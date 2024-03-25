@@ -2,16 +2,12 @@ import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from src.config import settings
 from .models import Base
+from src.config import settings
 
-DB_NAME = settings.db.database
-DB_PASSWORD = settings.db.password
-DB_USER = settings.db.user
-DB_HOST = settings.db.host
-DB_PORT = settings.db.port
 
 
 engine = create_async_engine(
-    f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
+    settings.db_url,
     echo=True,
 )
 

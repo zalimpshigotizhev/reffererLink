@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from src.db.config import get_db
-from src.db.models import UserORM
+from src.users.models import UserORM
 from src.referralCode.models import ReferralCodeORM, ReferrerReferralORM
-from src.users.schemas import UserSchemaRegister, UserSchemaLogin, UserBase, UserList
+from src.users.schemas import UserSchemaRegister, UserSchemaLogin, UserBase
 from src.utils import hash_password, validate_password, encode_jwt, decode_jwt, http_bearer
 
 router = APIRouter(prefix="/users", tags=["AUTH"])

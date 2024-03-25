@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from src.db.models import UserORM
+from src.users.models import UserORM
 from src.referralCode.models import ReferralCodeORM
 
 
@@ -25,14 +25,14 @@ async def pack_referrals(db, referrals: list):
                 select(UserORM).where(UserORM.id == result.referrer_id)
             )
             result_dict["referral_code"] = {
-                "id": code.id,
-                "code": code.code,
-                "user_id": {
-                    "name": referrer.name,
-                    "surname": referrer.surname,
-                    "email": referrer.email,
-                },
-            }
+                    "id": code.id,
+                    "code": code.code,
+                    "user_id": {
+                        "name": referrer.name,
+                        "surname": referrer.surname,
+                        "email": referrer.email,
+                    },
+                }
         else:
             result_dict["referral_code"] = "К сожалению срок кода истек или владелец захотел его удалить!"
         list_result.append(result_dict)
